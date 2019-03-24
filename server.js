@@ -88,9 +88,7 @@ app.post('/users', (req, res) => {
             })
           }
         })
-
       }
-
     })
   }
 })
@@ -101,26 +99,25 @@ app.get('/:firstname', (req, res) => {
       throw err;
     }
     if(!data1){
-      res.json({message:"username doesnot exist."})
+      return res.json({message:"username doesnot exist."})
     }
     else {
-      console.log(data1);
       db.collection('policyCategory').findOne({ user: req.params.firstname }, function (err, data2) {
         if (err) {
           throw err;
         }
         else {
           var policyInfo = {
-            "agent": data1.agent,
-            "user": data1.firstname,
-            "company_name": data1.company_name,
-            "policy_mode": data1.policy_mode,
-            "policy_number": data1.policy_number,
-            "policy_type": data1.policy_type,
-            "policy_start_date": data1.policy_start_date,
-            "policy_end_date": data1.policy_end_date,
-            "category_name": data2.category_name,
-            "user":data1.user
+            agent: data1.agent,
+            user: data1.firstname,
+            company_name: data1.company_name,
+            policy_mode: data1.policy_mode,
+            policy_number: data1.policy_number,
+            policy_type: data1.policy_type,
+            policy_start_date: data1.policy_start_date,
+            policy_end_date: data1.policy_end_date,
+            category_name: data2.category_name,
+            user:data1.user
           }
           res.json(policyInfo);
         }
@@ -129,7 +126,7 @@ app.get('/:firstname', (req, res) => {
   })
 })
 
-app.get('/abc/test', (req, res) => {
+app.get('/aggregate/policy/byuser', (req, res) => {
   //policyCarrier
   //policyCategory
   db.collection('policyCarrier').aggregate([{$group:{_id:"$user",policy:{$push:"$$ROOT"}}}],function(err,data){
