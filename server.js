@@ -141,3 +141,23 @@ app.get('/aggregate/policy/byuser', (req, res) => {
     }
   })
 })
+
+app.get('/particular/user/aggregate/policy/:firstname', (req, res) => {
+  //policyCarrier
+  //policyCategory
+  db.collection('policyCarrier').aggregate(
+    [
+      {$match:{"user":req.params.firstname}},
+      {$group:{_id:"$user",policy:{$push:"$$ROOT"}}}
+    ],function(err,data){
+      if(err){
+        throw err;
+      }
+      if(data.length==0){
+        return res.json({message:"No data found."});
+      }
+      else{
+        return res.json(data);
+      }
+  })
+})
